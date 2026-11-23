@@ -128,11 +128,9 @@ The dashboard is designed to help identify:
 
 ## 📁 Project Structure
 
-```text
 Supermarket-Sales-Analysis/
 │
-├── Dataset/
-│   └── supermarket_sales.csv
+├── README.md
 │
 ├── PowerBI/
 │   └── supermarket analysis.pbix
@@ -142,11 +140,16 @@ Supermarket-Sales-Analysis/
 │   ├── Product_Analysis.png
 │   └── Customer_Analysis.png
 │
-├── Documentation/
-│   └── Business_Insights.md
+├── Dataset/
+│   └── supermarket_sales.csv
 │
-└── README.md
-```
+└── Documentation/
+    ├── Project_Overview.md
+    ├── Business_Insights.md
+    ├── DAX_Measures.md
+    ├── Data_Dictionary.md
+    
+
 
 ## 🎓 Skills Demonstrated
 

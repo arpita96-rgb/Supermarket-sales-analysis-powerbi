@@ -1,0 +1,294 @@
+# 📊 DAX Measures – Supermarket Sales Analysis
+
+## 1. Introduction
+
+This document contains the DAX (Data Analysis Expressions) measures used or proposed for the Supermarket Sales Analysis Power BI dashboard.
+
+DAX measures help calculate business KPIs, evaluate sales performance, analyze profitability and generate meaningful business insights.
+
+**Tool:** Microsoft Power BI  
+**Language:** DAX  
+**Project:** Supermarket Sales Analysis
+
+---
+
+## 2. Revenue & Sales Performance Measures
+
+### 1. Total Revenue
+
+Calculates the total revenue generated from supermarket sales.
+
+```dax
+Total Revenue =
+SUM(Sales[Total])
+```
+
+### 2. Total Profit
+
+Calculates the overall profit generated.
+
+```dax
+Total Profit =
+SUM(Sales[Profit])
+```
+
+### 3. Total Orders
+
+Calculates the total number of unique orders.
+
+```dax
+Total Orders =
+DISTINCTCOUNT(Sales[Order ID])
+```
+
+### 4. Total Quantity Sold
+
+Calculates the total quantity of products sold.
+
+```dax
+Total Quantity =
+SUM(Sales[Quantity])
+```
+
+---
+
+## 3. Profitability Measures
+
+### 5. Average Order Value (AOV)
+
+Calculates the average revenue generated per order.
+
+```dax
+Average Order Value =
+DIVIDE(
+    [Total Revenue],
+    [Total Orders],
+    0
+)
+```
+
+### 6. Profit Margin (%)
+
+Calculates profit as a percentage of revenue.
+
+```dax
+Profit Margin =
+DIVIDE(
+    [Total Profit],
+    [Total Revenue],
+    0
+) * 100
+```
+
+---
+
+## 4. Sales Growth Analysis
+
+### 7. Previous Month Sales
+
+Calculates revenue from the previous month.
+
+```dax
+Previous Month Sales =
+CALCULATE(
+    [Total Revenue],
+    DATEADD('Date'[Date], -1, MONTH)
+)
+```
+
+### 8. Sales Growth (%)
+
+Measures the percentage change in revenue compared with the previous month.
+
+```dax
+Sales Growth % =
+DIVIDE(
+    [Total Revenue] - [Previous Month Sales],
+    [Previous Month Sales],
+    0
+) * 100
+```
+
+---
+
+## 5. Product Performance Measures
+
+### 9. Best-Selling Product
+
+Identifies the product with the highest sales quantity.
+
+```dax
+Best Selling Product =
+VAR ProductRanking =
+    TOPN(
+        1,
+        ALLSELECTED(Sales[Product]),
+        [Total Quantity],
+        DESC
+    )
+RETURN
+    CONCATENATEX(
+        ProductRanking,
+        Sales[Product],
+        ", "
+    )
+```
+
+### 10. Lowest-Selling Product
+
+Identifies the product with the lowest sales quantity.
+
+```dax
+Lowest Selling Product =
+VAR ProductRanking =
+    TOPN(
+        1,
+        FILTER(
+            ALLSELECTED(Sales[Product]),
+            NOT ISBLANK([Total Quantity])
+                && [Total Quantity] > 0
+        ),
+        [Total Quantity],
+        ASC
+    )
+RETURN
+    CONCATENATEX(
+        ProductRanking,
+        Sales[Product],
+        ", "
+    )
+```
+
+---
+
+## 6. Sales Target Analysis
+
+### 11. Sales Target
+
+Example measure when a target column is available.
+
+```dax
+Sales Target =
+SUM(Sales[Sales Target])
+```
+
+### 12. Sales Gap
+
+Calculates the difference between actual sales and target sales.
+
+```dax
+Sales Gap =
+[Total Revenue] - [Sales Target]
+```
+
+### 13. Target Achievement (%)
+
+Calculates the percentage of the sales target achieved.
+
+```dax
+Target Achievement % =
+DIVIDE(
+    [Total Revenue],
+    [Sales Target],
+    0
+) * 100
+```
+
+---
+
+## 7. Customer Analysis Measures
+
+### 14. Total Customers
+
+Calculates the number of unique customers.
+
+```dax
+Total Customers =
+DISTINCTCOUNT(Sales[Customer ID])
+```
+
+### 15. Returning Customers
+
+Example calculation of customers with more than one distinct order.
+
+```dax
+Returning Customers =
+COUNTROWS(
+    FILTER(
+        VALUES(Sales[Customer ID]),
+        CALCULATE(
+            DISTINCTCOUNT(Sales[Order ID])
+        ) > 1
+    )
+)
+```
+
+### 16. Returning Customer Percentage
+
+Calculates the percentage of customers who placed multiple orders.
+
+```dax
+Returning Customer % =
+DIVIDE(
+    [Returning Customers],
+    [Total Customers],
+    0
+) * 100
+```
+
+---
+
+## 8. DAX Functions Used
+
+| DAX Function | Purpose |
+|---|---|
+| SUM() | Calculates total values |
+| DIVIDE() | Performs safe division |
+| DISTINCTCOUNT() | Counts unique values |
+| CALCULATE() | Modifies filter context |
+| FILTER() | Filters table rows |
+| TOPN() | Returns top-ranked records |
+| ALLSELECTED() | Respects external selections |
+| VALUES() | Returns distinct values |
+| COUNTROWS() | Counts table rows |
+| DATEADD() | Performs date-based calculations |
+| CONCATENATEX() | Combines text values |
+
+---
+
+## 9. Business Applications
+
+These DAX calculations support:
+
+- Monitoring overall revenue and profitability.
+- Measuring sales growth over time.
+- Evaluating product performance.
+- Tracking sales target achievement.
+- Understanding customer retention.
+- Comparing business performance across categories and locations.
+
+---
+
+## 10. Important Model Requirements
+
+Before using these formulas, verify the following:
+
+1. Replace table and column names with the actual names in your Power BI model.
+2. Create a proper Date table for time-intelligence calculations.
+3. Establish a relationship between the Date table and sales transaction dates.
+4. Ensure the Sales Target column exists before using target measures.
+5. Confirm that Order ID and Customer ID represent the correct unique identifiers.
+6. Check that returning-customer calculations match the project's definition of customer retention.
+
+**Note:** These are reference DAX formulas aligned with the dashboard KPIs. They should not be represented as verified copies of the exact measures in the uploaded PBIX until compared with its model.
+
+---
+
+## Conclusion
+
+DAX plays an important role in transforming raw sales data into meaningful business metrics.
+
+Through these measures, the Supermarket Sales Analysis project demonstrates the application of DAX for KPI calculations, profitability analysis, product performance, sales growth and customer analysis.
+
+**Author:** Arpita Jain  
+**Project:** Supermarket Sales Analysis | Power BI
